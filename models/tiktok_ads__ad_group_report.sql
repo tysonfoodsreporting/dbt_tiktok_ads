@@ -1,4 +1,12 @@
-{{ config(enabled=var('ad_reporting__tiktok_ads_enabled', true)) }}
+{{ config(enabled=var('ad_reporting__tiktok_ads_enabled', true),
+    unique_key = ['source_relation','date_day','account_id','campaign_id','ad_group_id',
+    'category','gender','audience_type','budget'],
+    partition_by={
+      "field": "date_day",
+      "data_type": "date",
+      "granularity": "day"
+    }
+    ) }}
 
 with hourly as (
     
