@@ -76,6 +76,7 @@ aggregated as (
         sum(hourly.video_views_p_25) as video_views_p_25,
         sum(hourly.video_views_p_50) as video_views_p_50, 
         sum(hourly.video_views_p_75) as video_views_p_75,
+        sum(hourly.video_views_p_100) as video_views_p_100,
         sum(hourly.real_time_conversion) as real_time_conversion,
         sum(hourly.total_purchase_value) as total_purchase_value,
         sum(hourly.total_sales_lead_value) as total_sales_lead_value,
