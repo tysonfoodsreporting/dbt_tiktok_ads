@@ -72,7 +72,7 @@ aggregated as (
         sum(hourly.profile_visits) as profile_visits,
         sum(hourly.follows) as follows,
     
-        sum(hourly.engagements) as engagements,
+        --sum(hourly.engagements) as engagements,
         sum(hourly.video_play_actions) as video_plays,
         sum(hourly.video_play_actions) as video_views,
     
