@@ -71,6 +71,11 @@ aggregated as (
         sum(hourly.shares) as shares,
         sum(hourly.profile_visits) as profile_visits,
         sum(hourly.follows) as follows,
+    
+        --sum(hourly.engagements) as engagements,
+        sum(hourly.video_play_actions) as video_plays,
+        sum(hourly.video_play_actions) as video_views,
+    
         sum(hourly.video_watched_2_s) as video_watched_2_s,
         sum(hourly.video_watched_6_s) as video_watched_6_s,
         sum(hourly.video_views_p_25) as video_views_p_25,
