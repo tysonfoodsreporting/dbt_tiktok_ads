@@ -25,13 +25,18 @@ ads as (
     from {{ var('ad_history') }}
     where is_most_recent_record
 ), 
+ch as (
 
+    select *
+    from {{ var('creative_history') }} 
+    where is_most_recent_record
+),
 joined as (
 
     select
         hourly.source_relation,
         cast(hourly.stat_time_hour as date) as date_day,
-        ads.advertiser_id,
+        coalesce(ads.advertiser_id,ch.advertiser_id) as advertiser_id,
         advertiser.advertiser_name,
         advertiser.currency,
         sum(hourly.clicks) as clicks,
@@ -61,6 +66,9 @@ joined as (
     left join ads
         on hourly.ad_id = ads.ad_id
         and hourly.source_relation = ads.source_relation
+    left join ch
+        on hourly.ad_id = ch.ad_id
+        and hourly.source_relation = ch.source_relation
     left join advertiser
         on ads.advertiser_id = advertiser.advertiser_id
         and ads.source_relation = advertiser.source_relation

@@ -41,7 +41,12 @@ campaigns as (
     from {{ var('campaign_history') }}
     where is_most_recent_record
 ), 
+ch as (
 
+    select *
+    from {{ var('creative_history') }} 
+    where is_most_recent_record
+),
 aggregated as (
 
     select
@@ -54,7 +59,7 @@ aggregated as (
         ad_groups.ad_group_id,
         ad_groups.ad_group_name,
         hourly.ad_id,
-        ads.ad_name,
+        coalesce(ads.ad_name, ch.ad_name) as ad_name,
         ads.base_url,
         ads.url_host,
         ads.url_path,
@@ -95,6 +100,9 @@ aggregated as (
     left join ads
         on hourly.ad_id = ads.ad_id
         and hourly.source_relation = ads.source_relation
+    left join ch
+        on hourly.ad_id = ch.ad_id
+        and hourly.source_relation = ch.source_relation
     left join ad_groups 
         on ads.ad_group_id = ad_groups.ad_group_id
         and ads.source_relation = ad_groups.source_relation

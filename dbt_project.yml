@@ -16,6 +16,7 @@ vars:
     ad_history: "{{ ref('stg_tiktok_ads__ad_history') }}"
     advertiser: "{{ ref('stg_tiktok_ads__advertiser') }}"
     campaign_country_report: "{{ ref('stg_tiktok_ads__campaign_country_report') }}"
+    creative_history: "{{ ref('stg_tiktok_ads__creative_history') }}"
   tiktok_ads__ad_group_hourly_passthrough_metrics: []
   tiktok_ads__ad_hourly_passthrough_metrics: []
   tiktok_ads__campaign_hourly_passthrough_metrics: []
