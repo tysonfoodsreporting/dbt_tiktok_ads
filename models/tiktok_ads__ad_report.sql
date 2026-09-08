@@ -42,7 +42,12 @@ campaigns as (
     from {{ var('campaign_history') }}
     where is_most_recent_record
 ),
+ch as (
 
+    select *
+    from {{ var('creative_history') }} 
+    where is_most_recent_record
+),
 aggregated as (
 
     select
@@ -55,7 +60,7 @@ aggregated as (
         ad_groups.ad_group_id,
         ad_groups.ad_group_name,
         hourly.ad_id,
-        ads.ad_name,
+        coalesce(ads.ad_name, ch.ad_name) as ad_name,
         advertiser.currency,
         ad_groups.category,
         ad_groups.gender,
@@ -95,15 +100,18 @@ aggregated as (
     left join ads
         on hourly.ad_id = ads.ad_id
         and hourly.source_relation = ads.source_relation
+    left join ch
+        on hourly.ad_id = ch.ad_id
+        and hourly.source_relation = ch.source_relation
     left join ad_groups 
-        on ads.ad_group_id = ad_groups.ad_group_id
-        and ads.source_relation = ad_groups.source_relation
+        on coalesce(ads.ad_group_id, ch.ad_group_id) = ad_groups.ad_group_id
+        and coalesce(ads.source_relation, ch.source_relation) = ad_groups.source_relation
     left join advertiser
-        on ads.advertiser_id = advertiser.advertiser_id
-        and ads.source_relation = advertiser.source_relation
+        on coalesce(ads.advertiser_id, ch.advertiser_id) = advertiser.advertiser_id
+        and coalesce(ads.source_relation, ch.source_relation) = advertiser.source_relation
     left join campaigns
-        on ads.campaign_id = campaigns.campaign_id
-        and ads.source_relation = campaigns.source_relation
+        on coalesce(ads.campaign_id, ch.campaign_id) = campaigns.campaign_id
+        and coalesce(ads.source_relation, ch.source_relation) = campaigns.source_relation
     {{ dbt_utils.group_by(15) }}
 
 )
