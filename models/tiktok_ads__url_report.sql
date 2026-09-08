@@ -104,14 +104,14 @@ aggregated as (
         on hourly.ad_id = ch.ad_id
         and hourly.source_relation = ch.source_relation
     left join ad_groups 
-        on ads.ad_group_id = ad_groups.ad_group_id
-        and ads.source_relation = ad_groups.source_relation
+        on coalesce(ads.ad_group_id, ch.ad_group_id) = ad_groups.ad_group_id
+        and coalesce(ads.source_relation, ch.source_relation) = ad_groups.source_relation
     left join advertiser
-        on ads.advertiser_id = advertiser.advertiser_id
-        and ads.source_relation = advertiser.source_relation
+        on coalesce(ads.advertiser_id, ch.advertiser_id) = advertiser.advertiser_id
+        and coalesce(ads.source_relation, ch.source_relation) = advertiser.source_relation
     left join campaigns
-        on ads.campaign_id = campaigns.campaign_id
-        and ads.source_relation = campaigns.source_relation
+        on coalesce(ads.campaign_id, ch.campaign_id) = campaigns.campaign_id
+        and coalesce(ads.source_relation, ch.source_relation) = campaigns.source_relation
 
     {% if var('ad_reporting__url_report__using_null_filter', True) %}
         -- We are filtering for only ads where url fields are populated.

@@ -70,8 +70,8 @@ joined as (
         on hourly.ad_id = ch.ad_id
         and hourly.source_relation = ch.source_relation
     left join advertiser
-        on ads.advertiser_id = advertiser.advertiser_id
-        and ads.source_relation = advertiser.source_relation
+        on coalesce(ads.advertiser_id, ch.advertiser_id) = advertiser.advertiser_id
+        and coalesce(ads.source_relation, ch.source_relation) = advertiser.source_relation
     {{ dbt_utils.group_by(5) }}
 
 )
